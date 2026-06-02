@@ -45,7 +45,7 @@ return [
     |
     */
 
-    'username' => 'email',
+    'username' => 'username',
 
     'email' => 'email',
 
@@ -73,7 +73,7 @@ return [
     |
     */
 
-    'home' => '/home',
+    'home' => '/dashboard',
 
     /*
     |--------------------------------------------------------------------------
@@ -164,9 +164,10 @@ return [
     'features' => [
         Features::registration(),
         Features::resetPasswords(),
-        // Features::emailVerification(),
-        Features::updateProfileInformation(),
         Features::updatePasswords(),
+        /*
+        Features::emailVerification(),
+        Features::updateProfileInformation(),
         Features::twoFactorAuthentication([
             'confirm' => true,
             'confirmPassword' => true,
@@ -175,6 +176,7 @@ return [
         Features::passkeys([
             'confirmPassword' => true,
         ]),
+        */
     ],
 
 ];
