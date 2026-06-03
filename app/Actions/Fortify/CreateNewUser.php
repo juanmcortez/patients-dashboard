@@ -27,6 +27,7 @@ class CreateNewUser implements CreatesNewUsers
                 'required',
                 'string',
                 'max:128',
+                'alpha_dash',
                 Rule::unique(User::class, 'username'),
             ],
             'name' => [
