@@ -29,7 +29,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             ],
             'name' => [
                 'string',
-                'max:255'
+                'max:255',
             ],
             'email' => [
                 'required',
@@ -47,9 +47,9 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             $this->updateVerifiedUser($user, $input);
         } else {
             $user->forceFill([
-                'username'  => $input['username'],
-                'name'      => $input['name'],
-                'email'     => $input['email'],
+                'username' => $input['username'],
+                'name' => $input['name'],
+                'email' => $input['email'],
             ])->save();
         }
     }
