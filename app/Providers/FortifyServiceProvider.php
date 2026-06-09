@@ -32,6 +32,19 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Fortify::loginView(function () {
+            return view('components.pages.auth.login');
+        });
+        Fortify::registerView(function () {
+            return view('components.pages.auth.register');
+        });
+        Fortify::requestPasswordResetLinkView(function () {
+            return view('components.pages.auth.forgot-password');
+        });
+        Fortify::resetPasswordView(function (Request $request) {
+            return view('components.pages.auth.reset-password', ['request' => $request]);
+        });
+
         Fortify::createUsersUsing(CreateNewUser::class);
         Fortify::updateUserProfileInformationUsing(UpdateUserProfileInformation::class);
         Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);
@@ -40,16 +53,16 @@ class FortifyServiceProvider extends ServiceProvider
 
         /*
          * Allow login using either username or email.
-         * Expects the login input to be named "login" in the form.
+         * Expects the login input to be named "username" in the form.
          */
         Fortify::authenticateUsing(function (Request $request) {
-            Validator::make($request->all(), [
-                'login' => ['required', 'string'],
+            $request->validate([
+                'username' => ['required', 'string'],
                 'password' => ['required', 'string'],
-            ])->validate();
-            $login = (string) $request->input('login');
-            $user = User::where('email', $login)
-                ->orWhere('username', $login)
+            ]);
+            $username = (string) $request->input('username');
+            $user = User::where('email', $username)
+                ->orWhere('username', $username)
                 ->first();
             if ($user !== null && Hash::check($request->input('password'), $user->password)) {
                 return $user;
@@ -59,7 +72,7 @@ class FortifyServiceProvider extends ServiceProvider
         });
 
         RateLimiter::for('login', function (Request $request) {
-            $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())).'|'.$request->ip());
+            $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())) . '|' . $request->ip());
 
             return Limit::perMinute(5)->by($throttleKey);
         });
@@ -72,7 +85,7 @@ class FortifyServiceProvider extends ServiceProvider
             $credentialId = $request->input('credential.id');
 
             return Limit::perMinute(10)->by(
-                ($credentialId ?: $request->session()->getId()).'|'.$request->ip()
+                ($credentialId ?: $request->session()->getId()) . '|' . $request->ip()
             );
         });
     }
