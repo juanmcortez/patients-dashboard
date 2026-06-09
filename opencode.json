@@ -1,0 +1,10 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "patients": {
+      "type": "local",
+      "command": ["docker", "exec", "-i", "PHP_Laravel_Development", "php", "artisan", "mcp:start", "patients"],
+      "enabled": true
+    }
+  }
+}
